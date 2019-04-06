@@ -1,5 +1,5 @@
 # Tic-tac-toe
-This is a two-player, command line based game of tic-tac-toe made with Ruby. You can play by visiting this link (yet to be hosted), or if you have Ruby installed, you can download this repository and play from the comfort of your own terminal.
+This is a two-player, command line based game of tic-tac-toe made with Ruby. You can play by visiting this [link](https://repl.it/@coped/tic-tac-toe), or if you have Ruby installed, you can download this repository and play from the comfort of your own terminal.
 
 >"Wow, this is the best tic-tac-toe game I’ve ever played"
 >
