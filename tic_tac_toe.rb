@@ -1,6 +1,5 @@
-class Player
-    attr_reader :name, :symbol
-    
+class Player 
+    attr_reader :symbol
     def initialize name, symbol
         @name = name
         @symbol = symbol
@@ -8,58 +7,74 @@ class Player
     
     def turn
         puts "#{@name}'s turn (#{@symbol}):"
-        input = gets.chomp
+        input = gets.chomp.to_i
     end
 end
 
-class GameBoard < Player
-    attr_accessor :board, :victory, :board_positions, :one
+class GameBoard
+    attr_reader :end
 
-    def initialize 
-        @one = "1"
-        @two = "2"
-        @three = "3"
-        @four = "4"
-        @five = "5"
-        @six = "6"
-        @seven = "7"
-        @eight = "8"
-        @nine = "9"
-
-        @victory = false
+    def initialize  position
+        @position = position
+        @end = false
+        self.board_view
     end
 
+    public
     
-
-    @board_positions = [@one, @two, @three, @four, @five, @six, @seven, @eight, @nine]
-
-    @@winning_rows = [
-        [@one, @two, @three],
-        [@four, @five, @six],
-        [@seven, @eight, @nine],
-        [@one, @four, @seven],
-        [@two, @five, @eight],
-        [@three, @six, @nine],
-        [@one, @five, @nine],
-        [@three, @five, @seven]
-    ]
-
-    @@winnner = nil
+    def fill_position input, symbol
+        @position[input] = symbol
+        self.board_view
+        self.check_end
+    end
+    
+    protected
 
     def board_view
         puts ""
-        puts " #{@one} | #{@two} | #{@three} ".center(100)
+        puts " #{@position[1]} | #{@position[2]} | #{@position[3]} ".center(100)
         puts "---|---|---".center(100)
-        puts " #{@four} | #{@five} | #{@six} ".center(100)
+        puts " #{@position[4]} | #{@position[5]} | #{@position[6]} ".center(100)
         puts "---|---|---".center(100)
-        puts " #{@seven} | #{@eight} | #{@nine} ".center(100)
+        puts " #{@position[7]} | #{@position[8]} | #{@position[9]} ".center(100)
+        puts ""
     end
+    
+    @@winning_rows = [
+        [1, 2, 3], [4, 5, 6],
+        [7, 8, 9], [1, 4, 7],
+        [2, 5, 8], [3, 6, 9],
+        [1, 5, 9], [3, 5, 7]
+    ]
 
-    def check_victory 
+    def check_end 
         @@winning_rows.each do |row|
-            if row.all? {|i| i === "X"} || row.all? {|i| i === "O"}
-                @victory = true
+            if row.all? {|i| @position[i] === "X"}
+                @end = true
+                puts "-----------------------------------".center(100)
+                puts ""
+                puts "PLAYER 1 WINS!".center(100)
+                puts ""
+                puts "-----------------------------------".center(100)
+            elsif row.all? {|i| @position[i] === "O"}
+                @end = true
+                puts "-----------------------------------".center(100)
+                puts ""
+                puts "PLAYER 2 WINS!".center(100)
+                puts ""
+                puts "-----------------------------------".center(100)
             end
+        end
+
+        if @position[1..9].any? {|i| i.is_a? Integer}
+            nil
+        else
+            @end = true
+            puts "-----------------------------------".center(100)
+            puts ""
+            puts "DRAW!".center(100)
+            puts ""
+            puts "-----------------------------------".center(100)
         end
     end
 end
@@ -73,54 +88,46 @@ puts "------------------------------------------------------------------".center
 replay = "yes"
 while replay == "yes"
     puts "\nEnter Player 1's Name (X):"
-    player_1_name = gets.chomp.strip
-    player_1 = Player.new player_1_name, "X"
+    player_1 = Player.new gets.chomp.strip, "X"
 
     puts "\nEnter Player 2's Name (O):"
-    player_2_name = gets.chomp.strip
-    player_2 = Player.new player_2_name, "O"
+    player_2 = Player.new gets.chomp.strip, "O"
 
-    # puts "---------------------------".center(100)
-    # puts ""
-    # puts "READY TO PLAY? (yes/no)".center(100)
-    # puts ""
-    # puts "---------------------------".center(100)
+    puts "---------------------------".center(100)
+    puts ""
+    puts "READY TO PLAY? (yes/no)".center(100)
+    puts ""
+    puts "---------------------------".center(100)
 
-    # ready = gets.chomp.downcase
-    # until ready == "yes"
-    #     ["\n\t\t\t\t\t\t.", ".", "."].each {|i| print i; sleep 1}
-    #     2.times {puts ""}
-    #     puts "-----------------------------------".center(100)
-    #     puts ""
-    #     puts "... ARE YOU READY NOW? (yes/no)".center(100)
-    #     puts ""
-    #     puts "-----------------------------------".center(100)
-    #     ready = gets.chomp.downcase
-    # end
-
-    new_game = GameBoard.new
-    puts new_game.board_view
-
-    while new_game.victory == false
-        player_1.turn
-        new_game.one = player_1.symbol
-        puts new_game.board_view
-        new_game.check_victory
-
-        break if new_game.victory
-
-        player_2.turn
-        puts new_game.board_view
-        new_game.check_victory
+    ready = gets.chomp.downcase
+    until ready == "yes"
+        ["\n\t\t\t\t\t\t.", ".", "."].each {|i| print i; sleep 1}
+        2.times {puts ""}
+        puts "-----------------------------------".center(100)
+        puts ""
+        puts "... ARE YOU READY NOW? (yes/no)".center(100)
+        puts ""
+        puts "-----------------------------------".center(100)
+        ready = gets.chomp.downcase
     end
 
-    puts "Congratulations, whoever won."
-    puts "Replay? (yes/no)"
+    game = GameBoard.new([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+    while game.end == false
+        game.fill_position player_1.turn, player_1.symbol
+
+        break if game.end
+
+        game.fill_position player_2.turn, player_2.symbol
+    end
+
+    
+    puts "\nReplay? (yes/no)"
     replay = gets.chomp.downcase
 end
-puts "-----------------------------------".center(100)
+puts "------------------------------".center(100)
 puts ""
 puts "THANKS FOR PLAYING".center(100)
 puts ""
-puts "-----------------------------------".center(100)
+puts "------------------------------".center(100)
 
