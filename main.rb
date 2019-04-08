@@ -1,3 +1,17 @@
+class String
+    def colorize color_code
+        "\e[#{color_code}m#{self}\e[0m"
+    end
+
+    def red
+        colorize(31)
+    end
+
+    def blue
+        colorize(34)
+    end
+end
+
 class Player 
     attr_reader :name, :symbol
     def initialize name, symbol
@@ -46,11 +60,11 @@ class GameBoard
 
     def board_view
         puts ""
-        puts " #{@position[1]} | #{@position[2]} | #{@position[3]} ".center(100)
-        puts "---|---|---".center(100)
-        puts " #{@position[4]} | #{@position[5]} | #{@position[6]} ".center(100)
-        puts "---|---|---".center(100)
-        puts " #{@position[7]} | #{@position[8]} | #{@position[9]} ".center(100)
+        puts " #{@position[1]} | #{@position[2]} | #{@position[3]} "
+        puts "---|---|---"
+        puts " #{@position[4]} | #{@position[5]} | #{@position[6]} "
+        puts "---|---|---"
+        puts " #{@position[7]} | #{@position[8]} | #{@position[9]} "
         puts ""
     end
     
@@ -63,7 +77,7 @@ class GameBoard
 
     def check_end player_name
         @@winning_rows.each do |row|
-            if row.all? {|i| @position[i] === "X"} || row.all? {|i| @position[i] === "O"}
+            if row.all? {|i| @position[i] === "X".red} || row.all? {|i| @position[i] === "O".blue}
                 @end = true
                 puts "-----------------------------------".center(100)
                 puts ""
@@ -94,10 +108,10 @@ puts ""
 puts "------------------------------------------------------------------".center(100)
 
 puts "\nEnter Player 1's Name (X):"
-player_1 = Player.new gets.chomp.strip, "X"
+player_1 = Player.new gets.chomp.strip, "X".red
 
 puts "\nEnter Player 2's Name (O):"
-player_2 = Player.new gets.chomp.strip, "O"
+player_2 = Player.new gets.chomp.strip, "O".blue
 
 puts "---------------------------".center(100)
 puts ""
