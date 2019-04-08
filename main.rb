@@ -1,5 +1,5 @@
 class Player 
-    attr_reader :symbol
+    attr_reader :name, :symbol
     def initialize name, symbol
         @name = name
         @symbol = symbol
@@ -29,10 +29,17 @@ class GameBoard
 
     public
     
-    def fill_position input, symbol
-        @position[input] = symbol
-        self.board_view
-        self.check_end
+    def fill_position input, symbol, player_name
+        continue = false
+        if @position[input].is_a? Integer
+            @position[input] = symbol
+            self.board_view
+            self.check_end player_name
+            continue = true
+        else
+            puts "That's not an option."
+        end
+        continue
     end
     
     protected
@@ -54,20 +61,13 @@ class GameBoard
         [1, 5, 9], [3, 5, 7]
     ]
 
-    def check_end 
+    def check_end player_name
         @@winning_rows.each do |row|
-            if row.all? {|i| @position[i] === "X"}
+            if row.all? {|i| @position[i] === "X"} || row.all? {|i| @position[i] === "O"}
                 @end = true
                 puts "-----------------------------------".center(100)
                 puts ""
-                puts "PLAYER 1 WINS!".center(100)
-                puts ""
-                puts "-----------------------------------".center(100)
-            elsif row.all? {|i| @position[i] === "O"}
-                @end = true
-                puts "-----------------------------------".center(100)
-                puts ""
-                puts "PLAYER 2 WINS!".center(100)
+                puts "#{player_name} WINS!".center(100)
                 puts ""
                 puts "-----------------------------------".center(100)
             end
@@ -86,6 +86,7 @@ class GameBoard
     end
 end
 
+# Beginning of game
 puts "------------------------------------------------------------------".center(100)
 puts ""
 puts "WELCOME TO TIC-TAC-TOE".center(100)
@@ -126,11 +127,15 @@ while replay == "yes"
     game = GameBoard.new([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
 
     while game.end == false
-        game.fill_position player_1.turn, player_1.symbol
+         until game.fill_position player_1.turn, player_1.symbol, player_1.name
+            game.fill_position player_1.turn, player_1.symbol, player_1.name
+         end
 
         break if game.end
 
-        game.fill_position player_2.turn, player_2.symbol
+        until game.fill_position player_2.turn, player_2.symbol, player_2.name
+            game.fill_position player_2.turn, player_2.symbol, player_2.name
+        end   
     end
 
     puts "\nReplay? (yes/no)"
