@@ -5,9 +5,16 @@ class Player
         @symbol = symbol
     end
     
+    public
+
     def turn
         puts "#{@name}'s turn (#{@symbol}):"
         input = gets.chomp.to_i
+        until (1..9).include? input
+            puts "\nEnter a valid number."
+            input = gets.chomp.to_i
+        end
+        input
     end
 end
 
@@ -85,32 +92,37 @@ puts "WELCOME TO TIC-TAC-TOE".center(100)
 puts ""
 puts "------------------------------------------------------------------".center(100)
 
+puts "\nEnter Player 1's Name (X):"
+player_1 = Player.new gets.chomp.strip, "X"
+
+puts "\nEnter Player 2's Name (O):"
+player_2 = Player.new gets.chomp.strip, "O"
+
+puts "---------------------------".center(100)
+puts ""
+puts "READY TO PLAY? (yes/no)".center(100)
+puts ""
+puts "---------------------------".center(100)
+
+ready = gets.chomp.downcase
+until ready == "yes"
+    ["\n\t\t\t\t\t\t.", ".", "."].each {|i| print i; sleep 1}
+    2.times {puts ""}
+    puts "-----------------------------------".center(100)
+    puts ""
+    puts "... ARE YOU READY NOW? (yes/no)".center(100)
+    puts ""
+    puts "-----------------------------------".center(100)
+    ready = gets.chomp.downcase
+end
+
 replay = "yes"
 while replay == "yes"
-    puts "\nEnter Player 1's Name (X):"
-    player_1 = Player.new gets.chomp.strip, "X"
-
-    puts "\nEnter Player 2's Name (O):"
-    player_2 = Player.new gets.chomp.strip, "O"
-
-    puts "---------------------------".center(100)
+    puts "-------------------------".center(100)
     puts ""
-    puts "READY TO PLAY? (yes/no)".center(100)
+    puts "LET'S BEGIN".center(100)
     puts ""
-    puts "---------------------------".center(100)
-
-    ready = gets.chomp.downcase
-    until ready == "yes"
-        ["\n\t\t\t\t\t\t.", ".", "."].each {|i| print i; sleep 1}
-        2.times {puts ""}
-        puts "-----------------------------------".center(100)
-        puts ""
-        puts "... ARE YOU READY NOW? (yes/no)".center(100)
-        puts ""
-        puts "-----------------------------------".center(100)
-        ready = gets.chomp.downcase
-    end
-
+    puts "-------------------------".center(100)
     game = GameBoard.new([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
 
     while game.end == false
@@ -121,7 +133,6 @@ while replay == "yes"
         game.fill_position player_2.turn, player_2.symbol
     end
 
-    
     puts "\nReplay? (yes/no)"
     replay = gets.chomp.downcase
 end
