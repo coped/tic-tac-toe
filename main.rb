@@ -60,11 +60,11 @@ class GameBoard
 
     def board_view
         puts ""
-        puts " #{@position[1]} | #{@position[2]} | #{@position[3]} "
+        puts " #{@position[7]} | #{@position[8]} | #{@position[9]} "
         puts "---|---|---"
         puts " #{@position[4]} | #{@position[5]} | #{@position[6]} "
         puts "---|---|---"
-        puts " #{@position[7]} | #{@position[8]} | #{@position[9]} "
+        puts " #{@position[1]} | #{@position[2]} | #{@position[3]} "
         puts ""
     end
     
